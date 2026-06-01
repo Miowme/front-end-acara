@@ -58,7 +58,7 @@ const useAddModalCategory = () => {
         if (typeof fileUrl === "string"){
             mutateDeleteFile({fileUrl, callback: () => onChange(undefined) });
         }
-    }
+    };
 
     const handleOnClose = (onClose: () => void) => {
         const fileUrl = getValues("icon");
