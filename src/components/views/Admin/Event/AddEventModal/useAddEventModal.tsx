@@ -1,21 +1,38 @@
+import { DELAY } from "@/constants/list.constants";
 import { ToasterContext } from "@/contexts/ToasterContext";
+import useDebounce from "@/hooks/useDebounce";
 import useMediaHandling from "@/hooks/useMediaHandling";
 import categoryServices from "@/services/category.service";
+import eventServices from "@/services/event.service";
 import { ICategory } from "@/types/Category";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { useMutation } from "@tanstack/react-query";
-import { useContext } from "react";
+import { DateValue } from "@nextui-org/react";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/router";
+import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as Yup from "yup";
 
 const schema = Yup.object().shape({
     name: Yup.string().required("Please input name"),
-    description: Yup.string().required("Please input description"),
-    icon: Yup.mixed<FileList | string>().required("Please input icon"),
+    slug: Yup.string().required("Please input slug"),
+    category: Yup.string().required("Please select category"),
+    startDate: Yup.mixed<DateValue>().required("Please select start date"),
+    endDate: Yup.mixed<DateValue>().required("Please select end date"),
+    isPublished: Yup.string().required("Please select status"),
+    isFeatured: Yup.string().required("Please select featured"),
+    description: Yup.string().required("Please select description"),
+    isOnline: Yup.string().required("Please select online or offline"),
+    region: Yup.string().required("Please select region"),
+    latitude: Yup.string().required("Please select latitude coordinate"),
+    longitude: Yup.string().required("Please select longitude coordinate"),
+    banner: Yup.mixed<FileList | string>().required("Please input banner"),
 });
 
-const useAddModalCategory = () => {
+const useAddModalEvent = () => {
     const { setToaster } = useContext(ToasterContext);
+    const router = useRouter();
+    const debounce = useDebounce();
     const {
         isPendingMutateUploadFile,
         isPendingMutateDeleteFile,
@@ -34,21 +51,21 @@ const useAddModalCategory = () => {
         resolver: yupResolver(schema),
     });
 
-    const preview = watch("icon");
-    const fileUrl = getValues("icon");
+    const preview = watch("banner");
+    const fileUrl = getValues("banner");
 
-    const handleUploadIcon = (
+    const handleUploadBanner = (
         files: FileList, 
         onChange: (files: FileList | undefined) => void
     ) => {
         handleUploadFile(files, onChange, (fileUrl: string | undefined) => {
             if (fileUrl) { 
-            setValue("icon", fileUrl);
+            setValue("banner", fileUrl);
             }
         });
     };
 
-    const handleDeleteIcon = (
+    const handleDeleteBanner = (
         onChange: (files: FileList | undefined) => void
     ) => {
         handleDeleteFile(fileUrl, () => onChange(undefined))
@@ -59,6 +76,28 @@ const useAddModalCategory = () => {
             reset();
             onClose();
         });
+    };
+
+    const {
+        data: dataCategory,
+    } = useQuery({
+        queryKey: ["Categories"],
+        queryFn: () => categoryServices.getCategories(),
+        enabled: router.isReady,
+    });
+
+    const [searchRegency, setSearchRegency] = useState("");
+
+    const {
+        data: dataRegion
+    } = useQuery({
+        queryKey: ["region", searchRegency],
+        queryFn: () => eventServices.searchLocationByRegency(`${searchRegency}`),
+        enabled: searchRegency !== "",
+    });
+
+    const handleSearchRegion = (region: string) => {
+        debounce(() => setSearchRegency(region), DELAY)
     };
 
     const addCategory = async (payload: ICategory) => {
@@ -98,12 +137,16 @@ const useAddModalCategory = () => {
         isPendingMutateAddCategory,
         isSuccessMutateAddCategory,
         preview,
-        handleUploadIcon,
+        handleUploadBanner,
         isPendingMutateUploadFile,
-        handleDeleteIcon,
+        handleDeleteBanner,
         isPendingMutateDeleteFile,
         handleOnClose,
+        dataCategory,
+        handleSearchRegion,
+        dataRegion,
+        searchRegency,
     };
 };
 
-export default useAddModalCategory;
+export default useAddModalEvent;
