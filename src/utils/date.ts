@@ -11,19 +11,20 @@ const standardTime = (time: number) => {
 
 const toDateStandard = (date: DateValue) => {
     const year = date.year;
-    const month = date.month;
-    const day = date.day;
+    const month = standardTime(date.month);
+    const day = standardTime(date.day);
 
     const hour = "hour" in date ? date.hour : 0;
     const minute = "minute" in date ? date.minute : 0;
     const second = "second" in date ? date.second : 0;
-
+    
     const result = `${year}-${month}-${day} ${standardTime(hour)}:${standardTime(minute)}:${standardTime(second)}`;
     return result;
 };
 
 const toInputDate = (date: string) => {
     const formattedDate = parseAbsoluteToLocal(`${date.replace(" ", "T")}+07:00`);
+    return formattedDate;
 };
 
 export { toDateStandard, toInputDate };
