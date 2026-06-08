@@ -21,7 +21,7 @@ const schema = Yup.object().shape({
     category: Yup.string().required("Please select category"),
     startDate: Yup.mixed<DateValue>().required("Please select start date"),
     endDate: Yup.mixed<DateValue>().required("Please select end date"),
-    isPublished: Yup.string().required("Please select status"),
+    isPublish: Yup.string().required("Please select status"),
     isFeatured: Yup.string().required("Please select featured"),
     description: Yup.string().required("Please select description"),
     isOnline: Yup.string().required("Please select online or offline"),
@@ -29,6 +29,7 @@ const schema = Yup.object().shape({
     latitude: Yup.string().required("Please select latitude coordinate"),
     longitude: Yup.string().required("Please select longitude coordinate"),
     banner: Yup.mixed<FileList | string>().required("Please input banner"),
+    address: Yup.string().required("Please input address"),
 });
 
 const useAddModalEvent = () => {
@@ -51,13 +52,14 @@ const useAddModalEvent = () => {
         setValue,
     } = useForm({
         resolver: yupResolver(schema),
+        defaultValues: {
+            startDate: now(getLocalTimeZone()),
+            endDate: now(getLocalTimeZone()),
+        }
     });
 
     const preview = watch("banner");
     const fileUrl = getValues("banner");
-
-    setValue('startDate', now(getLocalTimeZone()));
-    setValue('endDate', now(getLocalTimeZone()));
 
     const handleUploadBanner = (
         files: FileList, 
@@ -134,12 +136,10 @@ const useAddModalEvent = () => {
     const handleAddEvent = (data: IEventForm) => {
         const payload = {
             ...data,
-            isFeatured: Boolean(data.isFeatured),
-            isPublished: Boolean(data.isPublished),
-            isOnline: Boolean(data.isOnline),
             startDate: data.startDate ? toDateStandard(data.startDate) : "",
             endDate: data.endDate ? toDateStandard(data.endDate) : "",
             location: {
+                address: `${data.address}`,
                 region: `${data.region}`,
                 coordinates: [Number(data.latitude), Number(data.longitude)]
             },
