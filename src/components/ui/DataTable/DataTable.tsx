@@ -13,6 +13,8 @@ interface PropTypes {
     isLoading?: boolean;
     onClickButtonTopContent?: () => void;
     renderCell: (item: Record<string, unknown>, columnKey: Key) => ReactNode;
+    showLimit?: boolean;
+    showSearch?: boolean;
     totalPages: number;
 }
 
@@ -34,12 +36,15 @@ const DataTable = (props: PropTypes) => {
                 isLoading,
                 onClickButtonTopContent,
                 renderCell,
+                showLimit = true,
+                showSearch = true,
                 totalPages, 
             } = props;
 
             const TopContent = useMemo(() => {
                 return (
                     <div className="flex flex-col-reverse items-start justify-between gap-y-4 lg:flex-row lg:items-center">
+                        {showSearch && (
                         <Input 
                             isClearable 
                             className="w-full sm:max-w-[24%]" 
@@ -47,7 +52,8 @@ const DataTable = (props: PropTypes) => {
                             startContent={<CiSearch />}
                             onClear={handleClearSearch}
                             onChange={handleSearch}
-                        />
+                            />
+                        )}
                         {buttonTopContentLabel && (
                             <Button color="danger" onPress={onClickButtonTopContent}>
                                 {buttonTopContentLabel}
@@ -60,6 +66,7 @@ const DataTable = (props: PropTypes) => {
             const BottomContent = useMemo(() => {
                 return (
                     <div className="flex items-center justify-center lg:justify-between">
+                        {showLimit && (
                         <Select
                             className="hidden max-w-36 lg:block"
                             size="md"
@@ -75,6 +82,7 @@ const DataTable = (props: PropTypes) => {
                                 </SelectItem>
                             ))}
                         </Select>
+                        )}
                         {totalPages > 1 && (
                             <Pagination 
                                 isCompact 
