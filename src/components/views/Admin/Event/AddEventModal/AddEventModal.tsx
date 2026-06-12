@@ -173,6 +173,21 @@ const AddEventModal = (props: PropTypes) => {
                               )}
                             />
                             <Controller 
+                                name="description"
+                                control={control}
+                                render={({field}) => ( 
+                                <Textarea 
+                                    {...field}
+                                    label="Description" 
+                                    variant="bordered" 
+                                    isInvalid={errors.description !== undefined}
+                                    errorMessage={errors.description?.message}
+                                />
+                              )}
+                            />
+                            <p className="text-sm font-bold">Location</p>
+                            <div className="flex flex-col gap-4 mb-2">
+                            <Controller 
                                 name="isOnline"
                                 control={control}
                                 render={({field}) => ( 
@@ -190,21 +205,6 @@ const AddEventModal = (props: PropTypes) => {
                                 </Select>
                               )}
                             />
-                            <Controller 
-                                name="description"
-                                control={control}
-                                render={({field}) => ( 
-                                <Textarea 
-                                    {...field}
-                                    label="Description" 
-                                    variant="bordered" 
-                                    isInvalid={errors.description !== undefined}
-                                    errorMessage={errors.description?.message}
-                                />
-                              )}
-                            />
-                            <p className="text-sm font-bold">Location</p>
-                            <div className="flex flex-col gap-4 mb-2">
                             <Controller 
                                 name="region"
                                 control={control}

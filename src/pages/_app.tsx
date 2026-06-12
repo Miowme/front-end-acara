@@ -5,13 +5,21 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "next-auth/react";
 import AppShell from "@/components/commons/AppShell";
 import { ToasterProvider } from "@/contexts/ToasterContext";
+import { onErrorHandler } from "@/libs/axios/responseHandler";
 
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       refetchOnWindowFocus: false,
       retry: false,
+      throwOnError(error) {
+        onErrorHandler(error);
+        return false;
+      }
     },
+    mutations: {
+      onError: onErrorHandler
+    }
   },
 });
 
