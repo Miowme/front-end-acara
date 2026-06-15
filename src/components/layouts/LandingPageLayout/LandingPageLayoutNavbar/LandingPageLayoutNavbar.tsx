@@ -1,6 +1,5 @@
-import { Avatar, Button, ButtonProps, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from "@nextui-org/react"
+import { Avatar, Button, ButtonProps, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Input, Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle, Link, Listbox, ListboxItem, Spinner } from "@nextui-org/react"
 import Image from "next/image";
-import Link from "next/link";
 import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
 import { cn } from "@/utils/cn";
 import { useRouter } from "next/router";
@@ -8,11 +7,20 @@ import { CiSearch } from "react-icons/ci";
 import { signOut, useSession } from "next-auth/react";
 import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
 import { Fragment } from "react";
+import { IEvent } from "@/types/Event";
 
 const LandingPageLayoutNavbar = () => {
     const router = useRouter();
     const session = useSession();
-    const {dataProfile} = useLandingPageLayoutNavbar();
+    const {
+        dataProfile,         
+        dataEventsSearch,
+        isLoadingEventsSearch,
+        isRefetchingEventsSearch,
+        handleSearch,
+        search,
+        setSearch,
+    } = useLandingPageLayoutNavbar();
     return (
         <Navbar 
             maxWidth="full" 
@@ -57,9 +65,36 @@ const LandingPageLayoutNavbar = () => {
                         className="w-[300px]" 
                         placeholder="Search Event"
                         startContent={<CiSearch />}
-                        onClear={() => {}}
-                        onChange={() => {}}
+                        onClear={() => setSearch("")}
+                        onChange={handleSearch}
                     />
+                    {search  !== "" && (
+                        <Listbox 
+                            items={dataEventsSearch?.data || []} 
+                            className="absolute right-0 top-12 rounded-xl border bg-white"
+                        >
+                            {!isRefetchingEventsSearch && !isLoadingEventsSearch ? (
+                                (item: IEvent) => (
+                                    <ListboxItem key={item._id} href={`/event/${item.slug}`}>
+                                        <div className="flex items-center gap-2">
+                                            <Image 
+                                                src={`${item.banner}`} 
+                                                alt={`${item.name}`} 
+                                                className="w-2/5 rounded-md" width={100} height={40}
+                                            />
+                                            <p className="w-3/5 text-wrap">
+                                                {item.name}
+                                            </p>
+                                         </div>
+                                    </ListboxItem>
+                                )
+                            ) : (
+                                <ListboxItem key="loading">
+                                    <Spinner color="danger" size="sm" />
+                                </ListboxItem>
+                            )}
+                        </Listbox>
+                    )}
                 </NavbarItem>
                 {session.status === "authenticated" ? (
                     <NavbarItem className="hidden lg:block">
@@ -107,11 +142,12 @@ const LandingPageLayoutNavbar = () => {
                     {NAV_ITEMS.map((item) => ( 
                         <NavbarMenuItem 
                             key={`nav-${item.label}`} 
-                            className={cn("font-medium text-default-700 hover:text-danger", {
-                                "font-bold text-danger": router.pathname === item.href
-                            })}
                         >
-                            <Link href={item.href}>{item.label}</Link>
+                            <Link 
+                                href={item.href}                             
+                                className={cn("font-medium text-default-700 hover:text-danger", {
+                                "font-bold text-danger": router.pathname === item.href
+                            })}>{item.label}</Link>
                         </NavbarMenuItem>
                     ))}
                     {session.status === "authenticated" ? (

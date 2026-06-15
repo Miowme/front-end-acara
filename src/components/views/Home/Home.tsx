@@ -27,6 +27,7 @@ const Home = () => {
                 title="Featured Event"
                 events={dataFeaturedEvents?.data}
                 isLoading={isLoadingFeaturedEvents}
+                urlMore="/event?isFeatured=true"
             />
             <Skeleton isLoaded={!isLoadingBanners} className="mb-16 h-[20vw] w-full rounded-2xl px-6 lg:px-0">
                 <Image 
@@ -41,6 +42,7 @@ const Home = () => {
                 title="Latest Event"
                 events={dataLatestEvents?.data}
                 isLoading={isLoadingDataLatestEvents}
+                urlMore="/event?isFeatured=false"
             />
             <HomeCategoryList 
                 categories={dataCategories?.data} 

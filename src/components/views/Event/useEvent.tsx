@@ -8,11 +8,13 @@ const useEvent = () => {
     const {
         currentLimit,
         currentPage,
-        currentSearch,
+        currentCategory,
+        currentIsFeatured,
+        currentIsOnline,
     } = useChangeUrl();
     
     const getEvents = async () => {
-        let params = `limit=${currentLimit}&page=${currentPage}`;
+        let params = `limit=${currentLimit}&page=${currentPage}&category=${currentCategory}&isFeatured=${currentIsFeatured}&isOnline=${currentIsOnline}`;
         const res = await eventServices.getEvents(params);
         const {data} = res;
         return data;
@@ -24,7 +26,14 @@ const useEvent = () => {
         isRefetching: isRefetchingEvent,
         refetch: refetchEvent,
     } = useQuery({
-        queryKey: ["Events", currentPage, currentLimit, currentSearch],
+        queryKey: [
+                "Events", 
+                currentPage, 
+                currentLimit, 
+                currentCategory, 
+                currentIsFeatured, 
+                currentIsOnline
+        ],
         queryFn: () => getEvents(),
         enabled: router.isReady && !!currentPage && !!currentLimit,
     });
