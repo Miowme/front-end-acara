@@ -5,16 +5,28 @@ import { convertTime } from "@/utils/date";
 import Image from "next/image";
 import { ITicket } from "@/types/Ticket";
 import DetailEventTicket from "./DetailEventTicket";
+import DetailEventCart from "./DetailEventCart";
+import Script from "next/script";
+import environment from "@/config/environment";
 
 const DetailEvent = () => {
     const {
         dataDetailEvent,
-        isLoadingDetailEvent,
         dataTicket,
-        isLoadingTicket,
+        dataTicketInCart,
+        cart,
+        handleAddToCart,
+        handleChangeQuantity,
+        mutateCreateOrder,
+        isPendingCreateOrder,
     } = useDetailEvent();
     return(
         <div className="px-8 md:px-0">
+            <Script 
+                src={environment.MIDTRANS_SNAP_URL} 
+                data-client-key={environment.MIDTRANS_CLIENT_KEY} 
+                strategy="lazyOnload"
+            />
             <Skeleton className="h-6 w-1/4 rounded-lg" isLoaded={!!dataDetailEvent?.name}>
                 <Breadcrumbs>
                     <BreadcrumbItem href="/">Home</BreadcrumbItem>
@@ -77,6 +89,8 @@ const DetailEvent = () => {
                                         <DetailEventTicket 
                                             key={`ticket-${ticket._id}`}
                                             ticket={ticket}
+                                            cart={cart}
+                                            handleAddToCart={() => handleAddToCart(`${ticket._id}`)}
                                         />
                                     ))}
                                 </div>
@@ -84,7 +98,15 @@ const DetailEvent = () => {
                         </Tabs>
                     </div>
                 </div>
-                <div className="w-full lg:w-2/6"></div>
+                <div className="w-full lg:w-2/6">
+                    <DetailEventCart 
+                        cart={cart} 
+                        dataTicketInCart={dataTicketInCart}
+                        onChangeQuantity={handleChangeQuantity}
+                        onCreateOrder={mutateCreateOrder}
+                        isLoading={isPendingCreateOrder}
+                    />
+                </div>
             </section>
         </div>
     );
