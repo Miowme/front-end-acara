@@ -127,7 +127,7 @@ const useAddModalEvent = () => {
         onSuccess: () => {
             setToaster({
                 type: "success",
-                message: "Success add category",
+                message: "Success add event",
             });
             reset();
         }

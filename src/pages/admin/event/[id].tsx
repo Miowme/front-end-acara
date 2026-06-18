@@ -4,7 +4,7 @@ import DetailEvent from "@/components/views/Admin/DetailEvent";
 const AdminDetailEventPage = () => {
     return (
         <DashboardLayout 
-            title="Detail Category" 
+            title="Detail Event" 
             description="Manage information for this event." 
             type="admin"
         >
