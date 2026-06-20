@@ -23,7 +23,7 @@ const useLandingPageLayoutNavbar = () => {
     });
 
     const getEvents = async () => {
-        const params = `search=${search}&limit=${LIMIT_EVENT}&page=${PAGE_DEFAULT}&isPublished=true`;
+        const params = `search=${search}&limit=${LIMIT_EVENT}&page=${PAGE_DEFAULT}&isPublish=true`;
         const res = await eventServices.getEvents(params);
         const { data } = res;
         return data;

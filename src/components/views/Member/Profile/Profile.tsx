@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import PictureTab from "./PictureTab";
 import useProfile from "./useProfile";
 import InfoTab from "./InfoTab";
+import SecurityTab from "./SecurityTab";
 
 const Profile = () => {
 
@@ -31,6 +32,9 @@ const Profile = () => {
                     isPendingUpdate={isPendingMutateUpdateProfile}
                     isSuccessUpdate={isSuccessMutateUpdateProfile}
                 />
+            </Tab>
+            <Tab key="security" title="Security">
+                <SecurityTab />
             </Tab>
         </Tabs>
     </div>
