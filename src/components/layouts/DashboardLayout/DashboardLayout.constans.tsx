@@ -33,16 +33,16 @@ const SIDEBAR_ADMIN = [
 
 const SIDEBAR_MEMBER = [
     {
-        key: "transaction",
-        label: "Transaction",
-        href: "/member/transaction",
-        icon: <CiWallet />,
-    },
-    {
         key: "profile",
         label: "Profile",
         href: "/member/profile",
         icon: <CiUser />,
+    },
+    {
+        key: "transaction",
+        label: "Transaction",
+        href: "/member/transaction",
+        icon: <CiWallet />,
     },
 ];
 

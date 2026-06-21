@@ -4,6 +4,7 @@ import { BUTTON_ITEMS, NAV_ITEMS } from "../LandingPageLayout.constants";
 import { cn } from "@/utils/cn";
 import { useRouter } from "next/router";
 import { CiSearch } from "react-icons/ci";
+import { FaShoppingCart } from "react-icons/fa";
 import { signOut, useSession } from "next-auth/react";
 import useLandingPageLayoutNavbar from "./useLandingPageLayoutNavbar";
 import { Fragment } from "react";
@@ -59,7 +60,7 @@ const LandingPageLayoutNavbar = () => {
             </div>
             <NavbarContent justify="end">
                 <NavbarMenuToggle className="lg:hidden"/>
-                <NavbarItem className="hidden lg:flex lg:relative">
+                <NavbarItem className="hidden lg:items-center lg:flex lg:gap-4 lg:relative">
                     <Input 
                         isClearable 
                         className="w-[300px]" 
@@ -95,6 +96,23 @@ const LandingPageLayoutNavbar = () => {
                             )}
                         </Listbox>
                     )}
+                    {session.status === "authenticated" && (
+                            <Button
+                                as={Link}
+                                href="/member/transaction"
+                                isIconOnly
+                                variant="light"
+                                className={cn(
+                                    "text-default-700 hover:text-danger min-w-10 w-10 h-10", 
+                                    {
+                                        "hidden": dataProfile?.role === "admin",
+                                    }
+                                )}
+                                aria-label="Shopping Cart"
+                            >
+                                <FaShoppingCart size={28} />
+                            </Button>
+                    )}
                 </NavbarItem>
                 {session.status === "authenticated" ? (
                     <NavbarItem className="hidden lg:block">
@@ -112,8 +130,15 @@ const LandingPageLayoutNavbar = () => {
                                 })}>
                                     Admin
                                 </DropdownItem>
-                                <DropdownItem key="profile" href="/member/profile">
+                                <DropdownItem key="profile" href="/member/profile" className={cn({
+                                    hidden: dataProfile?.role === "admin",
+                                })}>
                                     Profile
+                                </DropdownItem>
+                                <DropdownItem key="transaction" href="/member/transaction" className={cn({
+                                    hidden: dataProfile?.role === "admin",
+                                })}>
+                                    Transaction
                                 </DropdownItem>
                                 <DropdownItem key="signout" onPress={() => signOut()}>
                                     Log Out

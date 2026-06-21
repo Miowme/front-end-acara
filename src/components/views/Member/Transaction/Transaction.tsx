@@ -71,7 +71,7 @@ const Transaction = () => {
                     renderCell={renderCell} 
                     totalPages={dataTransactions?.pagination.totalPages}
                 />
-            )};
+            )}
         </section>
     );
 };
