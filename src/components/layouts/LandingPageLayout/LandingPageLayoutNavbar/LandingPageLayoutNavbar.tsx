@@ -185,9 +185,18 @@ const LandingPageLayoutNavbar = () => {
                                 <Link href="/admin/event">Admin</Link>
                             </NavbarMenuItem>
                             <NavbarMenuItem                          
-                                className="font-medium text-default-700 hover:text-danger"
+                                className={cn("font-medium text-default-700 hover:text-danger", {
+                                    "hidden": dataProfile?.role === "admin",
+                                })}
                             >
                                 <Link href="/member/profile">Profile</Link>
+                            </NavbarMenuItem>
+                            <NavbarMenuItem                          
+                                className={cn("font-medium text-default-700 hover:text-danger", {
+                                    "hidden": dataProfile?.role === "admin",
+                                })}
+                            >
+                                <Link href="/member/transaction">Transaction</Link>
                             </NavbarMenuItem>
                             <NavbarMenuItem>
                                 <Button 

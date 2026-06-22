@@ -17,7 +17,7 @@ const DashboardLayout = (props: PropTypes) => {
     return (
         <>
             <PageHead title={title}/>
-            <div className="max-w-screen-3xl 3xl:container flex">
+            <div className="max-w-screen-2xl 2xl:container flex">
                 <DashboardLayoutSidebar 
                     sidebarItems={type === "admin" ? SIDEBAR_ADMIN : SIDEBAR_MEMBER} 
                     isOpen={open}
